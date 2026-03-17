@@ -89,99 +89,88 @@ export function Navbar() {
       {/* Mobile drawer */}
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-secondary z-[60] lg:hidden flex flex-col"
-          >
-            {/* Drawer Header */}
-            <div className="h-20 container flex items-center justify-between border-b border-white/5">
-              <Link to="/" onClick={() => setOpen(false)}>
-                <img src="/logo.png" alt="LSS ABUAD Logo" className="h-10 w-auto brightness-0 invert" />
-              </Link>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setOpen(false)}
-                className="text-white hover:bg-white/10 h-12 w-12 rounded-full"
-              >
-                <X className="h-8 w-8" />
-              </Button>
-            </div>
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setOpen(false)}
+              className="fixed inset-0 bg-secondary/40 backdrop-blur-sm z-[60] lg:hidden"
+            />
+            
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%', transition: { duration: 0.4, ease: "easeInOut" } }}
+              transition={{ 
+                type: 'spring', 
+                damping: 25, 
+                stiffness: 200,
+              }}
+              className="fixed right-0 top-0 bottom-0 w-[75%] max-w-[320px] bg-background z-[70] lg:hidden flex flex-col shadow-2xl border-l border-border/50"
+            >
+              {/* Drawer Header */}
+              <div className="h-20 px-6 flex items-center justify-between border-b border-border/10 bg-white">
+                <div className="flex items-center gap-2">
+                  <img src="/logo.png" alt="LSS" className="h-10 w-auto" />
+                  <div className="flex flex-col">
+                    <span className="font-display font-bold text-base text-secondary leading-none">LSS ABUAD</span>
+                    <span className="text-[8px] text-primary font-ui uppercase tracking-widest font-bold mt-1">Official Portal</span>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setOpen(false)}
+                  className="text-secondary hover:bg-secondary/5 h-10 w-10 rounded-full"
+                >
+                  <X className="h-6 w-6" />
+                </Button>
+              </div>
 
-            {/* Decorative Background for Drawer */}
-            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-20">
-              <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 blur-[100px] rounded-full" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] border border-white/5 rounded-full" />
-              <img src="/logo.png" alt="" className="absolute bottom-[-10%] right-[-10%] h-[60%] w-auto opacity-5 grayscale" />
-            </div>
-
-            <div className="flex-1 relative z-10 container py-12 flex flex-col justify-between overflow-y-auto">
-              <motion.div 
-                className="flex flex-col gap-6"
-                initial="initial"
-                animate="animate"
-                variants={{
-                  animate: { transition: { staggerChildren: 0.05 } }
-                }}
-              >
-                {navLinks.map((link) => {
-                  const isActive = location.pathname === link.to;
-                  return (
-                    <motion.div
-                      key={link.to}
-                      variants={{
-                        initial: { opacity: 0, x: 20 },
-                        animate: { opacity: 1, x: 0 }
-                      }}
-                    >
+              {/* Drawer Body - Navigation Links */}
+              <div className="flex-1 overflow-y-auto py-8">
+                <div className="flex flex-col">
+                  {navLinks.map((link) => {
+                    const isActive = location.pathname === link.to;
+                    return (
                       <Link
+                        key={link.to}
                         to={link.to}
                         onClick={() => setOpen(false)}
-                        className="group flex flex-col"
+                        className={`px-8 py-3.5 flex items-center text-base font-ui transition-all duration-200 border-l-[3px] ${
+                          isActive 
+                            ? 'border-primary text-primary font-bold bg-primary/5' 
+                            : 'border-transparent text-secondary/70 hover:text-primary hover:border-primary hover:bg-muted/30'
+                        }`}
                       >
-                        <div className="flex items-center gap-4">
-                          <span className={`h-px w-0 bg-primary transition-all duration-300 ${isActive ? 'w-8' : 'group-hover:w-4'}`} />
-                          <span className={`font-display text-4xl font-bold transition-colors ${
-                            isActive ? 'text-white' : 'text-white/40 hover:text-white'
-                          }`}>
-                            {link.label}
-                          </span>
-                        </div>
-                        {isActive && (
-                          <span className="text-[10px] text-primary font-ui uppercase tracking-[0.3em] font-bold mt-1 ml-12">
-                            Current Page
-                          </span>
-                        )}
+                        {link.label}
                       </Link>
-                    </motion.div>
-                  );
-                })}
-              </motion.div>
+                    );
+                  })}
+                </div>
+              </div>
 
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="mt-12 pt-8 border-t border-white/5 flex flex-col gap-6"
-              >
-                <div className="flex items-center gap-4 text-white/40 font-ui text-xs uppercase tracking-widest">
-                  <span>Connect With Us</span>
-                  <div className="flex-1 h-px bg-white/5" />
+              {/* Drawer Footer */}
+              <div className="p-8 border-t border-border/10 bg-muted/10">
+                <p className="text-[10px] text-secondary/40 font-ui uppercase tracking-[0.2em] font-bold mb-4">
+                  Stay Connected
+                </p>
+                <div className="flex flex-col gap-4">
+                  <p className="text-xs text-secondary/60 font-body italic leading-relaxed">
+                    "The Voice of Law at Afe Babalola University."
+                  </p>
+                  <div className="flex gap-3">
+                    <div className="h-8 w-8 rounded-lg bg-secondary/5 flex items-center justify-center text-secondary/40 hover:text-primary transition-colors">
+                      <Scale className="h-4 w-4" />
+                    </div>
+                  </div>
                 </div>
-                <div className="flex gap-4">
-                  <Button asChild variant="outline" className="flex-1 h-12 rounded-xl border-white/10 text-white hover:bg-white/5">
-                    <Link to="/contact">Send Inquiry</Link>
-                  </Button>
-                  <Button asChild className="flex-1 h-12 rounded-xl bg-primary hover:bg-primary/90 text-white">
-                    <Link to="/pay-dues">Student Portal</Link>
-                  </Button>
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </nav>
