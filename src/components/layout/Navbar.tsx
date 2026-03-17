@@ -90,30 +90,96 @@ export function Navbar() {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 top-20 bg-background z-40 lg:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 bg-secondary z-[60] lg:hidden flex flex-col"
           >
-            <div className="flex flex-col p-6 gap-2">
-              {navLinks.map((link) => {
-                const isActive = location.pathname === link.to;
-                return (
-                  <Link
-                    key={link.to}
-                    to={link.to}
-                    onClick={() => setOpen(false)}
-                    className={`px-4 py-3 rounded font-ui text-base transition-colors duration-200 ${
-                      isActive
-                        ? 'bg-muted text-primary font-medium'
-                        : 'text-secondary hover:text-primary hover:bg-muted'
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                );
-              })}
+            {/* Drawer Header */}
+            <div className="h-20 container flex items-center justify-between border-b border-white/5">
+              <Link to="/" onClick={() => setOpen(false)}>
+                <img src="/logo.png" alt="LSS ABUAD Logo" className="h-10 w-auto brightness-0 invert" />
+              </Link>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setOpen(false)}
+                className="text-white hover:bg-white/10 h-12 w-12 rounded-full"
+              >
+                <X className="h-8 w-8" />
+              </Button>
+            </div>
+
+            {/* Decorative Background for Drawer */}
+            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-20">
+              <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 blur-[100px] rounded-full" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] border border-white/5 rounded-full" />
+              <img src="/logo.png" alt="" className="absolute bottom-[-10%] right-[-10%] h-[60%] w-auto opacity-5 grayscale" />
+            </div>
+
+            <div className="flex-1 relative z-10 container py-12 flex flex-col justify-between overflow-y-auto">
+              <motion.div 
+                className="flex flex-col gap-6"
+                initial="initial"
+                animate="animate"
+                variants={{
+                  animate: { transition: { staggerChildren: 0.05 } }
+                }}
+              >
+                {navLinks.map((link) => {
+                  const isActive = location.pathname === link.to;
+                  return (
+                    <motion.div
+                      key={link.to}
+                      variants={{
+                        initial: { opacity: 0, x: 20 },
+                        animate: { opacity: 1, x: 0 }
+                      }}
+                    >
+                      <Link
+                        to={link.to}
+                        onClick={() => setOpen(false)}
+                        className="group flex flex-col"
+                      >
+                        <div className="flex items-center gap-4">
+                          <span className={`h-px w-0 bg-primary transition-all duration-300 ${isActive ? 'w-8' : 'group-hover:w-4'}`} />
+                          <span className={`font-display text-4xl font-bold transition-colors ${
+                            isActive ? 'text-white' : 'text-white/40 hover:text-white'
+                          }`}>
+                            {link.label}
+                          </span>
+                        </div>
+                        {isActive && (
+                          <span className="text-[10px] text-primary font-ui uppercase tracking-[0.3em] font-bold mt-1 ml-12">
+                            Current Page
+                          </span>
+                        )}
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="mt-12 pt-8 border-t border-white/5 flex flex-col gap-6"
+              >
+                <div className="flex items-center gap-4 text-white/40 font-ui text-xs uppercase tracking-widest">
+                  <span>Connect With Us</span>
+                  <div className="flex-1 h-px bg-white/5" />
+                </div>
+                <div className="flex gap-4">
+                  <Button asChild variant="outline" className="flex-1 h-12 rounded-xl border-white/10 text-white hover:bg-white/5">
+                    <Link to="/contact">Send Inquiry</Link>
+                  </Button>
+                  <Button asChild className="flex-1 h-12 rounded-xl bg-primary hover:bg-primary/90 text-white">
+                    <Link to="/pay-dues">Student Portal</Link>
+                  </Button>
+                </div>
+              </motion.div>
             </div>
           </motion.div>
         )}
