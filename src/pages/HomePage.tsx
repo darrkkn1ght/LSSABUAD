@@ -231,15 +231,15 @@ export default function HomePage() {
                       </div>
                       
                       {/* Gradient overlay for text legibility */}
-                      <div className="absolute inset-0 z-10 bg-gradient-to-t from-secondary via-secondary/40 to-transparent group-hover:via-secondary/60 transition-all duration-500" />
+                      <div className="absolute inset-0 z-10 bg-gradient-to-t from-secondary via-secondary/60 to-transparent md:via-secondary/40 group-hover:via-secondary/60 transition-all duration-500" />
 
-                      <div className="absolute inset-0 z-20 p-6 md:p-8 flex flex-col justify-end">
+                      <div className="absolute inset-0 z-20 p-4 md:p-8 flex flex-col justify-end">
                         <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
                           <p className="text-[10px] text-primary font-ui uppercase tracking-[0.3em] font-bold mb-3">
                             {formatDate(a.published_at)}
                           </p>
                           <h3 className={`font-display font-bold text-white mb-3 leading-tight transition-colors group-hover:text-primary ${
-                            isFeature ? 'text-2xl md:text-3xl' : 'text-lg md:text-xl'
+                            isFeature ? 'text-xl md:text-3xl' : 'text-base md:text-xl'
                           }`}>
                             {a.title}
                           </h3>

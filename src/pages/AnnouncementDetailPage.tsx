@@ -71,8 +71,20 @@ export default function AnnouncementDetailPage() {
   return (
     <div>
       <Helmet>
-        <title>{announcement.title} | ABUAD Law Announcements</title>
+        <title>{announcement.title} | LSS ABUAD News</title>
         <meta name="description" content={announcement.excerpt || 'Read the full announcement at ABUAD Law Department.'} />
+        
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content={announcement.title} />
+        <meta property="og:description" content={announcement.excerpt || 'Read the latest news from LSS ABUAD.'} />
+        {announcement.featured_image_url && <meta property="og:image" content={announcement.featured_image_url} />}
+        
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={announcement.title} />
+        <meta name="twitter:description" content={announcement.excerpt || 'Read the latest news from LSS ABUAD.'} />
+        {announcement.featured_image_url && <meta name="twitter:image" content={announcement.featured_image_url} />}
       </Helmet>
       {announcement.featured_image_url && (
         <OptimizedImage 

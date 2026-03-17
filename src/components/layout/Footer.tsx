@@ -11,11 +11,11 @@ export function Footer() {
       <div className="container py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* About */}
-          <div>
+          <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <Link to="/" className="flex items-center gap-2 mb-4 bg-white/10 rounded p-2 inline-flex w-fit hover:bg-white/20 transition-colors">
               <img src="/logo.png" alt="LSS ABUAD Logo" className="h-12 w-auto" />
             </Link>
-            <p className="text-sm text-white/60 leading-relaxed">
+            <p className="text-sm text-white/60 leading-relaxed max-w-xs">
               {settings.site_tagline || 'The Voice of Law at ABUAD'}
             </p>
           </div>

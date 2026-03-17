@@ -236,6 +236,39 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_submissions: {
+        Row: {
+          amount: string
+          created_at: string | null
+          full_name: string
+          id: string
+          matric_number: string
+          receipt_url: string
+          status: string
+          updated_at: string | null
+        }
+        Insert: {
+          amount: string
+          created_at?: string | null
+          full_name: string
+          id?: string
+          matric_number: string
+          receipt_url: string
+          status?: string
+          updated_at?: string | null
+        }
+        Update: {
+          amount?: string
+          created_at?: string | null
+          full_name?: string
+          id?: string
+          matric_number?: string
+          receipt_url?: string
+          status?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

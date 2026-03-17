@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Scale } from 'lucide-react';
+import { Menu, X, Scale, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SearchOverlay } from '@/components/shared/SearchOverlay';
+import { Button } from '@/components/ui/button';
 
 const navLinks = [
   { to: '/', label: 'Home' },
@@ -17,13 +19,14 @@ const navLinks = [
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const location = useLocation();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 h-20 bg-background/80 backdrop-blur-md border-b border-border/50 shadow-sm">
       <div className="container h-full flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="LSS ABUAD Logo" className="h-14 w-auto" />
+          <img src="/logo.png" alt="LSS ABUAD Logo" className="h-10 md:h-14 w-auto transition-transform hover:scale-105" />
         </Link>
 
         {/* Desktop nav */}
@@ -45,17 +48,43 @@ export function Navbar() {
               </Link>
             );
           })}
+          
+          <div className="ml-4 pl-4 border-l border-border/50 flex items-center">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setSearchOpen(true)}
+              className="group flex items-center gap-2 text-secondary/40 hover:text-primary h-10 px-4 rounded-full bg-secondary/5 hover:bg-primary/5 transition-all duration-300"
+            >
+              <Search className="h-4 w-4 transition-transform group-hover:scale-110" />
+              <span className="text-[10px] items-center gap-1 font-ui uppercase tracking-widest hidden xl:flex">
+                Search <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 uppercase tracking-normal">⌘K</kbd>
+              </span>
+            </Button>
+          </div>
         </div>
 
         {/* Mobile toggle */}
-        <button
-          onClick={() => setOpen(!open)}
-          className="lg:hidden text-secondary p-2"
-          aria-label="Toggle menu"
-        >
-          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
+        <div className="flex items-center gap-2 lg:hidden">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setSearchOpen(true)}
+            className="text-secondary"
+          >
+            <Search className="h-5 w-5" />
+          </Button>
+          <button
+            onClick={() => setOpen(!open)}
+            className="text-secondary p-2"
+            aria-label="Toggle menu"
+          >
+            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </div>
+
+      <SearchOverlay open={searchOpen} onOpenChange={setSearchOpen} />
 
       {/* Mobile drawer */}
       <AnimatePresence>

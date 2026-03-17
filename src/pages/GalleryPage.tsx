@@ -5,8 +5,20 @@ import { supabase } from '@/integrations/supabase/client';
 import { PageHero } from '@/components/shared/PageHero';
 import { Skeleton } from '@/components/ui/skeleton';
 import { OptimizedImage } from '@/components/shared/OptimizedImage';
-import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
+import { PremiumEmptyState } from '@/components/shared/PremiumEmptyState';
+import { X, ChevronLeft, ChevronRight, ZoomIn, Camera } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { GalleryImage } from '@/types';
+
+const fadeUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6 }
+};
+
+const stagger = {
+  animate: { transition: { staggerChildren: 0.05 } }
+};
 
 export default function GalleryPage() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -17,8 +29,7 @@ export default function GalleryPage() {
       const { data, error } = await supabase
         .from('gallery_images')
         .select('*')
-        .order('display_order')
-        .limit(24);
+        .order('display_order');
       if (error) throw error;
       return (data ?? []) as GalleryImage[];
     },
@@ -38,83 +49,139 @@ export default function GalleryPage() {
   }, [handleKey]);
 
   return (
-    <div>
+    <div className="bg-white">
       <Helmet>
         <title>Gallery | LSS ABUAD</title>
         <meta name="description" content="A visual journey through moments, events, and academic life at LSS ABUAD." />
       </Helmet>
-      <PageHero title="Gallery" subtitle="Moments from the Law Department" />
-      <section className="py-16 container">
+      
+      <PageHero 
+        title="Visual Legacy" 
+        subtitle="Capturing the moments that define our legal community." 
+        backgroundImage="/hero-bg.jpg"
+      />
+
+      <section className="py-24 container relative overflow-hidden">
         {isLoading ? (
-          <div className="columns-2 md:columns-3 lg:columns-4 gap-4">
-            {Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-48 mb-4 rounded" />)}
+          <div className="columns-2 md:columns-3 lg:columns-4 gap-6">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <Skeleton key={i} className="w-full h-64 mb-6 rounded-[2rem]" />
+            ))}
           </div>
         ) : images.length === 0 ? (
-          <p className="text-center text-muted-foreground py-16">No gallery images yet.</p>
+          <PremiumEmptyState 
+            icon={Camera}
+            title="The Lens is Waiting"
+            message="No moments have been captured in the gallery yet. Stay tuned for future events."
+          />
         ) : (
-          <div className="columns-2 md:columns-3 lg:columns-4 gap-4">
+          <motion.div
+            variants={stagger}
+            initial="initial"
+            whileInView="animate"
+            viewport={{ once: true }}
+            className="columns-2 md:columns-3 lg:columns-4 gap-6 space-y-6"
+          >
             {images.map((img, i) => (
-              <div
+              <motion.div
                 key={img.id}
-                className="mb-4 break-inside-avoid group relative rounded overflow-hidden cursor-pointer"
+                variants={fadeUp}
+                className="break-inside-avoid group relative rounded-[2rem] overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 border border-secondary/5"
                 onClick={() => setLightboxIndex(i)}
               >
                 <OptimizedImage
                   src={img.image_url}
                   alt={img.alt_text || img.caption || 'Gallery image'}
-                  containerClassName="rounded"
-                  className="w-full group-hover:scale-105"
+                  containerClassName="rounded-[2rem]"
+                  className="w-full h-auto transition-transform duration-1000 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-secondary/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <ZoomIn className="h-8 w-8 text-white drop-shadow-lg" />
-                  {img.caption && (
-                    <p className="absolute bottom-3 left-3 right-3 text-xs text-white font-ui font-medium drop-shadow-md">{img.caption}</p>
-                  )}
+                
+                {/* Glassmorphism Overlay */}
+                <div className="absolute inset-0 bg-secondary/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
+                  <div className="flex flex-col items-center justify-center h-full translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    <div className="h-12 w-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white mb-4">
+                      <ZoomIn className="h-6 w-6" />
+                    </div>
+                    {img.caption && (
+                      <p className="text-sm text-white font-ui font-medium drop-shadow-md text-center">
+                        {img.caption}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </section>
 
-      {lightboxIndex !== null && images[lightboxIndex] && (
-        <div
-          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
-          onClick={() => setLightboxIndex(null)}
-        >
-          <button onClick={() => setLightboxIndex(null)} className="absolute top-4 right-4 text-white z-10" aria-label="Close">
-            <X className="h-8 w-8" />
-          </button>
-          {lightboxIndex > 0 && (
-            <button
-              onClick={(e) => { e.stopPropagation(); setLightboxIndex(i => (i ?? 1) - 1); }}
-              className="absolute left-4 text-white z-10"
-              aria-label="Previous"
+      {/* Polished Lightbox */}
+      <AnimatePresence>
+        {lightboxIndex !== null && images[lightboxIndex] && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-secondary/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-10"
+            onClick={() => setLightboxIndex(null)}
+          >
+            <button 
+              onClick={() => setLightboxIndex(null)} 
+              className="absolute top-8 right-8 text-white/40 hover:text-white transition-colors z-10"
             >
-              <ChevronLeft className="h-10 w-10" />
+              <X className="h-10 w-10" />
             </button>
-          )}
-          {lightboxIndex < images.length - 1 && (
-            <button
-              onClick={(e) => { e.stopPropagation(); setLightboxIndex(i => (i ?? 0) + 1); }}
-              className="absolute right-4 text-white z-10"
-              aria-label="Next"
+            
+            <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-6 z-10">
+              <button
+                disabled={lightboxIndex === 0}
+                onClick={(e) => { e.stopPropagation(); setLightboxIndex(i => Math.max((i ?? 0) - 1, 0)); }}
+                className="h-14 w-14 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-primary hover:border-primary disabled:opacity-20 transition-all active:scale-95"
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+              
+              <div className="text-white/40 font-ui text-xs tracking-[0.4em] uppercase">
+                {lightboxIndex + 1} <span className="mx-2">/</span> {images.length}
+              </div>
+              
+              <button
+                disabled={lightboxIndex === images.length - 1}
+                onClick={(e) => { e.stopPropagation(); setLightboxIndex(i => Math.min((i ?? 0) + 1, images.length - 1)); }}
+                className="h-14 w-14 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-primary hover:border-primary disabled:opacity-20 transition-all active:scale-95"
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
+            </div>
+
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              key={images[lightboxIndex].id}
+              className="relative max-w-full max-h-full flex flex-col items-center" 
+              onClick={(e) => e.stopPropagation()}
             >
-              <ChevronRight className="h-10 w-10" />
-            </button>
-          )}
-          <div className="max-w-4xl max-h-[80vh] p-4" onClick={(e) => e.stopPropagation()}>
-            <img
-              src={images[lightboxIndex].image_url}
-              alt={images[lightboxIndex].alt_text || images[lightboxIndex].caption || 'Gallery image'}
-              className="max-w-full max-h-[70vh] object-contain mx-auto rounded"
-            />
-            {images[lightboxIndex].caption && (
-              <p className="text-center text-white font-ui text-sm mt-4">{images[lightboxIndex].caption}</p>
-            )}
-          </div>
-        </div>
-      )}
+              <img
+                src={images[lightboxIndex].image_url}
+                alt={images[lightboxIndex].alt_text || images[lightboxIndex].caption || 'Gallery image'}
+                className="max-w-[90vw] max-h-[70vh] object-contain rounded-2xl shadow-2xl border border-white/10"
+              />
+              {images[lightboxIndex].caption && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-8 text-center"
+                >
+                  <p className="text-white font-display text-2xl font-bold mb-2">
+                    {images[lightboxIndex].caption}
+                  </p>
+                  <div className="h-px w-12 bg-primary/40 mx-auto" />
+                </motion.div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

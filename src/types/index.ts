@@ -68,3 +68,13 @@ export interface TimetableEntry {
 export interface SiteSettings {
   [key: string]: string;
 }
+
+export interface PaymentSubmission {
+  id: string;
+  full_name: string;
+  matric_number: string;
+  amount: string;
+  receipt_url: string;
+  status: 'pending' | 'verified' | 'rejected';
+  created_at: string;
+}

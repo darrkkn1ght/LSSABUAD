@@ -46,7 +46,15 @@ export const timetableSchema = z.object({
   path: ["end_time"],
 });
 
+export const paymentSubmissionSchema = z.object({
+  full_name: z.string().min(3, "Full name required"),
+  matric_number: z.string().min(5, "Valid matric number required"),
+  amount: z.string().min(1, "Amount required"),
+  receipt_url: z.string().url("Please upload your receipt screenshot"),
+});
+
 export type AnnouncementFormData = z.infer<typeof announcementSchema>;
 export type ExecutiveFormData = z.infer<typeof executiveSchema>;
 export type LecturerFormData = z.infer<typeof lecturerSchema>;
 export type TimetableFormData = z.infer<typeof timetableSchema>;
+export type PaymentSubmissionFormData = z.infer<typeof paymentSubmissionSchema>;
