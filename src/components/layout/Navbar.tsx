@@ -23,70 +23,72 @@ export function Navbar() {
   const location = useLocation();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 h-20 bg-background/80 backdrop-blur-md border-b border-border/50 shadow-sm">
-      <div className="container h-full flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="LSS ABUAD Logo" className="h-10 md:h-14 w-auto transition-transform hover:scale-105" />
-        </Link>
-
-        {/* Desktop nav */}
-        <div className="hidden lg:flex items-center gap-1">
-          {navLinks.map((link) => {
-            const isActive = location.pathname === link.to;
-            return (
-              <Link
-                key={link.to}
-                to={link.to}
-                className={`px-3 py-2 text-sm font-ui transition-colors duration-200 relative ${
-                  isActive ? 'text-secondary font-medium' : 'text-secondary/70 hover:text-primary'
-                }`}
+    <>
+      <nav className="fixed top-0 left-0 right-0 z-50 h-20 bg-background/80 backdrop-blur-md border-b border-border/50 shadow-sm">
+        <div className="container h-full flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/logo.png" alt="LSS ABUAD Logo" className="h-10 md:h-14 w-auto transition-transform hover:scale-105" />
+          </Link>
+  
+          {/* Desktop nav */}
+          <div className="hidden lg:flex items-center gap-1">
+            {navLinks.map((link) => {
+              const isActive = location.pathname === link.to;
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className={`px-3 py-2 text-sm font-ui transition-colors duration-200 relative ${
+                    isActive ? 'text-secondary font-medium' : 'text-secondary/70 hover:text-primary'
+                  }`}
+                >
+                  {link.label}
+                  {isActive && (
+                    <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-primary" />
+                  )}
+                </Link>
+              );
+            })}
+            
+            <div className="ml-4 pl-4 border-l border-border/50 flex items-center">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setSearchOpen(true)}
+                className="group flex items-center gap-2 text-secondary/40 hover:text-primary h-10 px-4 rounded-full bg-secondary/5 hover:bg-primary/5 transition-all duration-300"
               >
-                {link.label}
-                {isActive && (
-                  <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-primary" />
-                )}
-              </Link>
-            );
-          })}
-          
-          <div className="ml-4 pl-4 border-l border-border/50 flex items-center">
+                <Search className="h-4 w-4 transition-transform group-hover:scale-110" />
+                <span className="text-[10px] items-center gap-1 font-ui uppercase tracking-widest hidden xl:flex">
+                  Search <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 uppercase tracking-normal">⌘K</kbd>
+                </span>
+              </Button>
+            </div>
+          </div>
+  
+          {/* Mobile toggle */}
+          <div className="flex items-center gap-2 lg:hidden">
             <Button 
               variant="ghost" 
-              size="sm" 
+              size="icon" 
               onClick={() => setSearchOpen(true)}
-              className="group flex items-center gap-2 text-secondary/40 hover:text-primary h-10 px-4 rounded-full bg-secondary/5 hover:bg-primary/5 transition-all duration-300"
+              className="text-secondary"
             >
-              <Search className="h-4 w-4 transition-transform group-hover:scale-110" />
-              <span className="text-[10px] items-center gap-1 font-ui uppercase tracking-widest hidden xl:flex">
-                Search <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 uppercase tracking-normal">⌘K</kbd>
-              </span>
+              <Search className="h-5 w-5" />
             </Button>
+            <button
+              onClick={() => setOpen(!open)}
+              className="text-secondary p-2"
+              aria-label="Toggle menu"
+            >
+              {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
           </div>
         </div>
-
-        {/* Mobile toggle */}
-        <div className="flex items-center gap-2 lg:hidden">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => setSearchOpen(true)}
-            className="text-secondary"
-          >
-            <Search className="h-5 w-5" />
-          </Button>
-          <button
-            onClick={() => setOpen(!open)}
-            className="text-secondary p-2"
-            aria-label="Toggle menu"
-          >
-            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
-        </div>
-      </div>
-
-      <SearchOverlay open={searchOpen} onOpenChange={setSearchOpen} />
-
-      {/* Mobile drawer */}
+  
+        <SearchOverlay open={searchOpen} onOpenChange={setSearchOpen} />
+      </nav>
+  
+      {/* Mobile drawer — outside nav to avoid stacking context issues */}
       <AnimatePresence>
         {open && (
           <>
@@ -129,7 +131,7 @@ export function Navbar() {
                   <X className="h-6 w-6" />
                 </Button>
               </div>
-
+  
               {/* Drawer Body - Navigation Links */}
               <div className="flex-1 overflow-y-auto py-8">
                 <div className="flex flex-col">
@@ -152,7 +154,7 @@ export function Navbar() {
                   })}
                 </div>
               </div>
-
+  
               {/* Drawer Footer */}
               <div className="p-8 border-t border-border/10 bg-muted/10">
                 <p className="text-[10px] text-secondary/40 font-ui uppercase tracking-[0.2em] font-bold mb-4">
@@ -173,6 +175,6 @@ export function Navbar() {
           </>
         )}
       </AnimatePresence>
-    </nav>
+    </>
   );
 }
