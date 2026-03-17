@@ -1,0 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600;1,700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 234 28% 14%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 234 28% 14%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 234 28% 14%;
+
+    --primary: 0 72% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 245 45% 29%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 245 45% 29%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 0 72% 50%;
+
+    --radius: 4px;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 234 28% 14%;
+    --sidebar-primary: 0 72% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent-foreground: 234 28% 14%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 0 72% 50%;
+
+    /* Custom tokens */
+    --bg-base: 0 0% 100%;
+    --bg-surface: 220 27% 97%;
+    --bg-elevated: 245 45% 29%;
+    --bg-hover: 228 29% 95%;
+    --border-subtle: 220 13% 91%;
+    --border-default: 220 13% 83%;
+
+    /* Brand colors */
+    --brand-red: 0 72% 50%;
+    --brand-navy: 245 45% 29%;
+    --brand-navy-light: 244 42% 32%;
+
+    --gold: 0 72% 50%;
+    --gold-light: 245 45% 29%;
+    --gold-muted: 0 72% 50%;
+
+    --text-primary: 234 28% 14%;
+    --text-secondary: 244 42% 32%;
+    --text-muted: 220 9% 46%;
+
+    --success: 142 64% 38%;
+    --warning: 32 95% 44%;
+    --danger: 0 72% 50%;
+    --danger-light: 0 84% 60%;
+
+    /* Font families */
+    --font-display: 'Cormorant Garamond', serif;
+    --font-heading: 'Libre Baskerville', serif;
+    --font-body: 'Lora', serif;
+    --font-ui: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    line-height: 1.75;
+    font-size: 16px;
+  }
+
+  h1, h2 {
+    font-family: var(--font-display);
+  }
+
+  h3, h4, h5 {
+    font-family: var(--font-heading);
+  }
+
+  h6, button, input, select, textarea, label, nav, th {
+    font-family: var(--font-ui);
+  }
+
+  code, pre, .font-mono {
+    font-family: var(--font-mono) !important;
+  }
+}
+
+@layer utilities {
+  .red-rule {
+    @apply w-16 h-0.5 bg-primary mb-4;
+  }
+
+  .gold-rule {
+    @apply w-16 h-0.5 bg-primary mb-4;
+  }
+  
+  .gold-rule-wide {
+    @apply w-full h-0.5;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--brand-red)) 20%,
+      hsl(var(--brand-red)) 80%,
+      transparent
+    );
+  }
+
+  .red-rule-wide {
+    @apply w-full h-0.5;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--brand-red)) 20%,
+      hsl(var(--brand-red)) 80%,
+      transparent
+    );
+  }
+
+  .text-gold {
+    color: hsl(var(--brand-red));
+  }
+
+  .bg-base {
+    background-color: hsl(var(--bg-base));
+  }
+
+  .bg-surface {
+    background-color: hsl(var(--bg-surface));
+  }
+
+  .bg-elevated {
+    background-color: hsl(var(--bg-elevated));
+  }
+
+  /* Premium UI Utilities */
+  .glass-panel {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl;
+  }
+
+  .glass-card {
+    @apply bg-white/10 backdrop-blur-md border border-white/20 shadow-xl;
+  }
+
+  .noise-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.015;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+
+  .text-reveal-mask {
+    @apply overflow-hidden inline-block;
+  }
+
+  .parallax-wrap {
+    @apply overflow-hidden relative;
+  }
+
+  /* Custom minimalist scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-secondary/20 rounded-full hover:bg-secondary/40 transition-colors;
+  }
+}
